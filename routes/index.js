@@ -157,10 +157,10 @@ var doAction = function(req, res) {
 
 var getContents = function(req, res) {        
     var roomValue;
-    // var currentPlayer;
+    var currentPlayer;
     if(req.session.player) {
 		roomValue     = req.session.player.room;
-		// currentPlayer = req.session.player;
+		currentPlayer = req.session.player;
 	} else if (req.session.editorName) {
 		roomValue = req.query.roomValue;
     } else {
@@ -177,7 +177,7 @@ var getContents = function(req, res) {
 			res.send(room);
 		}
     );
-    //res.send(currentPlayer);
+    // res.send(currentPlayer);
 }
 
 var startEditor = function(req, res) {

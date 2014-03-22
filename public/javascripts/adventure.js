@@ -34,5 +34,5 @@ $(function() {  // setup local scope
 		});	
     }
 	getRoom();
-	// getPlayers();
+	getPlayers();
 }); // finish setting up local scope (call function defined)
