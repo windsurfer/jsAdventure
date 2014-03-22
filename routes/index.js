@@ -118,6 +118,8 @@ var start = function(req, res){
 				throw err;
 			}
 			p.online = true;
+			console.log("player is now online");
+		  savePlayer(p);
 		}
     );
 
@@ -126,7 +128,7 @@ var start = function(req, res){
 var quit = function(req, res){
 	if (req.session.player) {
 		var player = req.session.player;
-		player.playing = false;
+		player.online = false;
 		savePlayer(player);
 	}
     
@@ -182,7 +184,35 @@ var getContents = function(req, res) {
 			if (err || !room) {
 				room = defaultRoom;
 			}
-			res.send(room);
+			
+			playersCollection.find(
+		    {room: room.name
+			  }
+			  ,function(err, players){
+			    if (err || !players){
+			      throw err;
+			    }
+			    players.toArray(function(err, playerArray){
+			      if (err || !playerArray){
+			        throw err;
+			      }
+			      var playerNames = [];
+			      for(var i = 0; i < playerArray.length; i++){
+			        var player = playerArray[i];
+			        if (player.playername != req.session.player.playername){
+			          playerNames.push(player.playername);
+			        }
+			      }
+			      
+			      if (playerNames.length>0){
+			        var playerList = playerNames.join(", ");
+			        var verb = (playerNames.length == 1) ? " is" : " are";
+			        room.description += " " + playerNames + verb + " here.";
+			      }
+			    res.send(room);
+			    });
+			    
+			  });
 		}
     );
     
