@@ -1,0 +1,46 @@
+extends layout
+
+block header
+  script(src='/javascripts/editor.js')
+
+block content
+  h1(id="title") Adventure Game Editor
+
+  h2 Editor: #{editorName}      
+  form.form-horizontal()
+    input(type="radio", id="sickbayR", name="theRooms", value="sickbay")
+    label(for="sickbayR") sickbay
+    br
+    input(type="radio", id="engeerR", name="theRooms", value="engineering")
+    label(for="engeerR") engineering
+    br
+    input(type="radio", id="bridgeR", name="theRooms", value="bridge")
+    label(for="bridgeR") bridge
+    br
+    input(type="radio", id="voidR", name="theRooms", value="void")
+    label(for="voidR") void
+    br
+    input(type="radio", id="secretR", name="theRooms", value="secret")
+    label(for="secretR") secret
+    fieldset
+      div.control-group
+        label.control-label(for="roomName") Room Name: 
+        div.controls
+          textarea#roomName(name="roomName") The room name
+          button#loadRoom.input-append(type="button", for="roomName") Load
+      div.control-group
+        label.control-label(for="description") Description: 
+        div.controls
+          textarea#description(name="description") The room description
+      div.control-group
+        label.control-label(for="activity") Activity: 
+        div.controls
+          textarea#activity(name="activity") The room activity
+      div.control-group
+        label.control-label(for="exits") Exits: 
+        div.controls
+          textarea#exits(name="exits") The room exits
+      button#saveButton(type="submit") Save
+  form(action="/quit", method="post")
+    button#loadButton(type="submit") Quit
+    

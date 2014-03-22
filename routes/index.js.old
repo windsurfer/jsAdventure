@@ -1,0 +1,59 @@
+var sanitize = require('validator').sanitize;
+var rooms = require('../rooms.js').rooms;
+
+function index(req, res) {
+    if (req.session.player) {
+        res.redirect("/game");
+    } else {
+	res.render('index', { title: 'COMP 2406 Adventure Demo', 
+			      error: req.query.error });
+    }
+}
+
+function start(req, res) {
+    var player = req.body.player;
+    // Sanitize the player name as it may be displayed
+    req.session.player = sanitize(player).escape();
+    req.session.currentRoom = "bridge"; // We start on the bridge
+    res.redirect("/game")
+}
+
+function quit(req, res) {
+    req.session.destroy(function(err){
+        if(err){
+            console.log("Error: %s", err);
+        }
+    });
+    res.redirect("/");
+}
+
+function game(req, res) {
+    if (req.session.player) {
+	res.render("room.jade", {title: "Adventure Demo"});
+    } else {
+        res.redirect("/");
+    }
+}
+
+function doAction(req, res) {
+    var action = req.body.action;
+    var room = req.body.room;
+
+    if (action === "move") {
+	req.session.currentRoom = room;
+	res.send("Success");
+    } else {
+	res.send("Error: InvalidAction");
+    }
+}
+
+function getContents(req, res) {    
+    res.send(rooms[req.session.currentRoom]);
+}
+
+exports.index = index;
+exports.start = start;
+exports.quit = quit;
+exports.game = game;
+exports.doAction = doAction;
+exports.getContents = getContents;
