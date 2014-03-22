@@ -2,22 +2,16 @@
 // client-side code for adventure AJAX demo
 
 $(function() {  // setup local scope
-	/*
-    var getPlayers = function() {
-		$.getJSON("/getContents", function(currentPlayer) {
-			$('#currPlayer').html(currentPlayer.playername);
-		}
-	}	*/
     
     var getRoom = function() {
 		$.getJSON("/getContents", function(room) {
 			var exits;
-			$('#title').html(room.title);
-			$('#description').html(room.description);
+			$('#title').text(room.title);
+			$('#description').text(room.description);
 			if (room.activity) {
-				$('#activity').html(room.activity);
+				$('#activity').text(room.activity);
 			} else {
-				$('#activity').html("");
+				$('#activity').text("");
 			}
 			$('.exits').remove();
 			room.roomExits.forEach(function(theExit) {
@@ -34,5 +28,4 @@ $(function() {  // setup local scope
 		});	
     }
 	getRoom();
-	getPlayers();
 }); // finish setting up local scope (call function defined)

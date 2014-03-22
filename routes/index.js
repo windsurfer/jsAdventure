@@ -2,7 +2,6 @@ var bcrypt = require("bcrypt");
 var mc = require('mongodb').MongoClient;
 var playersCollection;
 var roomsCollection;
-var currentPlayers = [];
 
 var defaultRoom = {   name: "theVoid",
 		      title: "The Void",
@@ -111,6 +110,16 @@ var start = function(req, res){
     var password   = req.body.password;
     
     checkPass(req, res, playername, password, "player", "/game");
+    
+    playersCollection.findOne(
+		{playername: playername},
+		function(err, p) {
+			if (err || !p) {
+				throw err;
+			}
+			p.online = true;
+		}
+    );
 
 }
 
@@ -157,10 +166,9 @@ var doAction = function(req, res) {
 
 var getContents = function(req, res) {        
     var roomValue;
-    var currentPlayer;
+    
     if(req.session.player) {
-		roomValue     = req.session.player.room;
-		currentPlayer = req.session.player;
+		roomValue = req.session.player.room;
 	} else if (req.session.editorName) {
 		roomValue = req.query.roomValue;
     } else {
@@ -177,7 +185,7 @@ var getContents = function(req, res) {
 			res.send(room);
 		}
     );
-    // res.send(currentPlayer);
+    
 }
 
 var startEditor = function(req, res) {
@@ -245,6 +253,7 @@ var saveRoom = function(req, res) {
 	});
 }
 
+
 exports.index        = index;
 exports.register     = register;
 exports.start        = start;
@@ -258,24 +267,5 @@ exports.editor       = editor;
 exports.saveRoom     = saveRoom;
 
 
-// test cases
 
-process.argv.forEach(function(val, index, array) {
-	if (val == "test"){
-		console.log("TEST MODE ENGAGED");
-		connectToDBs(function(){
-			onlinePlayers.push("somePlayer");
-			console.log(onlinePlayers);
-			process.exit(-1);
-		});
-	}
-});
 
-		
-		
-		
-		
-		
-		
-		
-		
