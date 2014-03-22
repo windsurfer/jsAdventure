@@ -2,6 +2,7 @@ var bcrypt = require("bcrypt");
 var mc = require('mongodb').MongoClient;
 var playersCollection;
 var roomsCollection;
+var currentPlayers = [];
 
 var defaultRoom = {   name: "theVoid",
 		      title: "The Void",
